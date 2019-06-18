@@ -56,16 +56,11 @@
     return self;
 }
 
+
 -(void)initVolumeView{
-    volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-[UIScreen mainScreen].bounds.size.width, 0, 0, 0)];
-    [self showVolumeUI:YES];
-    for (UIView* view in volumeView.subviews) {
-        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
-            volumeSlider = (UISlider*)view;
-            break;
-        }
-    }
+  _volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-28, -2, 24, 24)];
 }
+
 
 #ifdef PRIVATE_API
 -(void)initSetting{
@@ -160,13 +155,14 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
 }
 
 RCT_EXPORT_METHOD(showVolumeUI:(BOOL)flag){
-    if(flag && [volumeView superview]){
-        [volumeView removeFromSuperview];
-    }else if(!flag && ![volumeView superview]){
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController].view addSubview:volumeView];
+    if(flag){
+      [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+      [[UIApplication sharedApplication].windows.firstObject addSubview:_volumeView];
+    }else {
+      [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+        [_volumeView removeFromSuperview];
     }
 }
-
 -(void)openSetting:(NSString*)service{
 #ifdef PRIVATE_API
     NSString *url = [setting objectForKey:service];
