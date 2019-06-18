@@ -159,10 +159,6 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
     }
 }
 
-RCT_EXPORT_METHOD(switchAirplane){
-    [self openSetting:@"airplane"];
-}
-
 RCT_EXPORT_METHOD(showVolumeUI:(BOOL)flag){
     if(flag && [volumeView superview]){
         [volumeView removeFromSuperview];
