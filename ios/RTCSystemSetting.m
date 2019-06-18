@@ -19,6 +19,7 @@
 
 @import UIKit;
 @import MediaPlayer;
+@import AVFoundation;
 
 @interface RCTSystemSetting()
 #ifdef BLUETOOTH
@@ -58,7 +59,7 @@
 
 
 -(void)initVolumeView{
-  _volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-28, -2, 24, 24)];
+  volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-28, -2, 24, 24)];
 }
 
 
@@ -157,10 +158,10 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
 RCT_EXPORT_METHOD(showVolumeUI:(BOOL)flag){
     if(flag){
       [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
-      [[UIApplication sharedApplication].windows.firstObject addSubview:_volumeView];
+      [[UIApplication sharedApplication].windows.firstObject addSubview:volumeView];
     }else {
       [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
-        [_volumeView removeFromSuperview];
+        [volumeView removeFromSuperview];
     }
 }
 -(void)openSetting:(NSString*)service{
