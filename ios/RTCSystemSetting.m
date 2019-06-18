@@ -141,6 +141,7 @@ RCT_EXPORT_METHOD(switchAirplane){
     [self openSetting:@"airplane"];
 }
 
+
 RCT_EXPORT_METHOD(isAirplaneEnabled:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
     NSString * radio = [[CTTelephonyNetworkInfo alloc] init].currentRadioAccessTechnology;
     bool isEnabled = radio == nil;
@@ -158,7 +159,11 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
     }
 }
 
--(void)showVolumeUI:(BOOL)flag{
+RCT_EXPORT_METHOD(switchAirplane){
+    [self openSetting:@"airplane"];
+}
+
+RCT_EXPORT_METHOD(showVolumeUI:(BOOL)flag){
     if(flag && [volumeView superview]){
         [volumeView removeFromSuperview];
     }else if(!flag && ![volumeView superview]){

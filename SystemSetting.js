@@ -117,12 +117,16 @@ export default class SystemSetting {
         SystemSettingNative.setVolume(val, config)
     }
 
-    static addVolumeListener(callback) {
+    static addVolumeListener(callback, hideUI) {
         return eventEmitter.addListener('EventVolume', callback)
+        if (hideUI) {
+          SystemSettingNative.showVolumeUI(false);
+        }
     }
 
     static removeVolumeListener(listener) {
         listener && listener.remove()
+        SystemSettingNative.showVolumeUI(true);
     }
 
     static async isWifiEnabled() {
@@ -196,12 +200,12 @@ export default class SystemSetting {
                 if (supported) await Linking.openURL(settingsLink);
                 break;
             }
-            case 'android': 
+            case 'android':
                 await SystemSettingNative.openAppSystemSettings()
                 break;
             default:
                 throw new Error('unknown platform')
-                break;    
+                break;
         }
     }
 

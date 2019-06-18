@@ -280,6 +280,31 @@ public class SystemSetting extends ReactContextBaseJavaModule implements Activit
     }
 
     @ReactMethod
+    public void showVolumeUI(boolean val) {
+      final Activity curActivity = getCurrentActivity();
+      AudioManager man = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+      curActivity.setOnKeyListener(new OnKeyListener() {
+          @Override
+          public boolean onKey(int keyCode, KeyEvent event) {
+              switch (event.getKeyCode()) {
+                  case KeyEvent.KEYCODE_VOLUME_UP:
+                      man.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                          AudioManager.ADJUST_RAISE,
+                          AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                      return !val;
+                  case KeyEvent.KEYCODE_VOLUME_DOWN:
+                      man.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                          AudioManager.ADJUST_LOWER,
+                          AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                      return !val;
+                 default:
+                      return super.onKeyDown(keyCode, event);
+              }
+          }
+      });
+    }
+
+    @ReactMethod
     public void setVolume(float val, ReadableMap config) {
         unregisterVolumeReceiver();
         String type = config.getString("type");
