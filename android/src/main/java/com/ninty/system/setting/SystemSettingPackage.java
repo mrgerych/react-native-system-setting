@@ -15,13 +15,20 @@ import java.util.List;
  */
 
 public class SystemSettingPackage implements ReactPackage {
+
+    private SystemSetting module;
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new SystemSetting(reactContext));
+        module = new SystemSetting(reactContext);
+        modules.add(module);
 
         return modules;
+    }
+
+    public SystemSetting getModule() {
+        return module;
     }
 
     // It has been removed in >= 0.47

@@ -46,6 +46,7 @@ public class SystemSetting extends ReactContextBaseJavaModule implements Activit
     private AudioManager am;
     private WifiManager wm;
     private LocationManager lm;
+    private boolean hideVolumeUI = false;
     private VolumeBroadcastReceiver volumeBR;
     private volatile BroadcastReceiver wifiBR;
     private volatile BroadcastReceiver bluetoothBR;
@@ -279,29 +280,13 @@ public class SystemSetting extends ReactContextBaseJavaModule implements Activit
         }
     }
 
+    public boolean isHideVolumeUI() {
+        return hideVolumeUI;
+    }
+
     @ReactMethod
     public void showVolumeUI(boolean val) {
-      final Activity curActivity = getCurrentActivity();
-      AudioManager man = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-      curActivity.setOnKeyListener(new OnKeyListener() {
-          @Override
-          public boolean onKey(int keyCode, KeyEvent event) {
-              switch (event.getKeyCode()) {
-                  case KeyEvent.KEYCODE_VOLUME_UP:
-                      man.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                          AudioManager.ADJUST_RAISE,
-                          AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                      return !val;
-                  case KeyEvent.KEYCODE_VOLUME_DOWN:
-                      man.adjustStreamVolume(AudioManager.STREAM_MUSIC,
-                          AudioManager.ADJUST_LOWER,
-                          AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                      return !val;
-                 default:
-                      return super.onKeyDown(keyCode, event);
-              }
-          }
-      });
+        hideVolumeUI = !val;
     }
 
     @ReactMethod
@@ -334,6 +319,13 @@ public class SystemSetting extends ReactContextBaseJavaModule implements Activit
             Log.e(TAG, "err", e);
         }
         registerVolumeReceiver();
+    }
+
+    public void sendVolumeEvent(){
+        WritableMap para = Arguments.createMap();
+        para.putDouble("value", 0.0d);
+        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("EventVolume", para);
     }
 
     @ReactMethod
