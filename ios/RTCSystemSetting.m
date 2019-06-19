@@ -156,14 +156,17 @@ RCT_EXPORT_METHOD(activeListener:(NSString *)type resolve:(RCTPromiseResolveBloc
 }
 
 RCT_EXPORT_METHOD(showVolumeUI:(BOOL)flag){
-    if(flag){
+  dispatch_sync(dispatch_get_main_queue(), ^{
+    if(!flag){
       [[AVAudioSession sharedInstance] setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
       [[UIApplication sharedApplication].windows.firstObject addSubview:volumeView];
     }else {
-      [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
+      [[AVAudioSession sharedInstance] setActive:NO error:nil];
         [volumeView removeFromSuperview];
     }
+  });
 }
+
 -(void)openSetting:(NSString*)service{
 #ifdef PRIVATE_API
     NSString *url = [setting objectForKey:service];

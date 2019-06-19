@@ -118,10 +118,8 @@ export default class SystemSetting {
     }
 
     static addVolumeListener(callback, hideUI) {
+        SystemSettingNative.showVolumeUI(false);
         return eventEmitter.addListener('EventVolume', callback)
-        if (hideUI) {
-          SystemSettingNative.showVolumeUI(false);
-        }
     }
 
     static removeVolumeListener(listener) {
